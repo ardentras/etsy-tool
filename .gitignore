@@ -1,0 +1,6 @@
+__pycache__
+.etsy-tool*
+build/
+dist/
+.DS_Store
+.api_key
