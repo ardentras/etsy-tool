@@ -48,15 +48,16 @@ class ThreadedEtsyRankTagsTask(threading.Thread):
                 'offset': offset
             }
             try:
-                jsonresp = requests.get("https://openapi.etsy.com/v2/listings/active", params).text
-                print(jsonresp)
-                response = json.loads(jsonresp)
+                response = json.loads(requests.get("https://openapi.etsy.com/v2/listings/active", params).text)
                 
                 helpers.updateRequestCount(1)
 
                 ids = ""
                 for result in response["results"]:
                     ids = "%s%d%s" % (ids, result["listing_id"], ",")
+
+                if len(ids) == 0:
+                    break
 
                 ids = ids[:-1]
 
@@ -83,9 +84,15 @@ class RankTags(tk.Toplevel):
         self.tagsEntryMaxLen = 1024
 
         self.master = master
+        self.focus()
         self.resizable(False, False)
         self.title("Rank Tags")
+        self.bind(helpers.ctlEnter(), self.runQuery)
+        self.bind("<Escape>", self.exit)
         self.create_widgets()
+
+    def exit(self, event):
+        event.widget.destroy()
 
     def create_widgets(self):
         titlerow=0
@@ -129,18 +136,29 @@ class RankTags(tk.Toplevel):
 
     def getHelp(self, *args):
         helpModal = tk.Toplevel()
+        helpModal.focus()
         helpModal.resizable(False, False)
+        helpModal.bind("<Escape>", self.exit)
+        helpModal.bind("<Return>", self.exit)
         helpModal.title("Help: Rank Tags")
 
         infotext="""
-        Select the number of pages to query using '# Pages'.
-        The more pages, the higher the sample size for ranking.
+Select the number of pages to query using '# Pages'.
+The more pages, the higher the sample size for ranking.
 
-        Enter tags using 'Tag'. Tags may contain whitespace.
-        Double click a tag to remove it from the list.
+Enter tags using 'Tag'. Tags may contain whitespace.
+Double click a tag to remove it from the list.
         """
-        helpModal.info = tk.Label(helpModal, text=infotext, justify="left")
-        helpModal.info.grid(row=0, column=0)
+        hotkeytext = """
+Hotkeys:
+Press <Return> to add a tag to the list
+Press <%s + Return> to submit the query
+Press <Escape> to exit subcommand
+        """ % (helpers.getCtlShort())
+        helpModal.info = tk.Label(helpModal, text=infotext, justify="left", padx=15)
+        helpModal.info.grid(row=0, column=0, sticky="ew")
+        helpModal.info = tk.Label(helpModal, text=hotkeytext, justify="center", padx=15)
+        helpModal.info.grid(row=1, column=0, sticky="ew")
 
         helpModal.exit = tk.Button(helpModal, text="Back", command=helpModal.destroy)
         helpModal.exit.grid(row=1, column=0)
@@ -148,14 +166,18 @@ class RankTags(tk.Toplevel):
     def runQuery(self, *args):
         if len(self.tagsList.get(0, "end")) == 0:
             errModal = tk.Toplevel()
+            errModal.focus()
             errModal.resizable(False, False)
+            errModal.bind("<Escape>", self.exit)
+            errModal.bind("<Return>", self.exit)
             errModal.title("Error")
 
             infotext="""
-            No tags provided. Please enter at least one tag to query.
+No tags provided. 
+Please enter at least one tag to query.
             """
-            errModal.info = tk.Label(errModal, text=infotext, justify="left")
-            errModal.info.grid(row=0, column=0)
+            errModal.info = tk.Label(errModal, text=infotext, justify="center", padx=15)
+            errModal.info.grid(row=0, column=0, sticky="ew")
 
             errModal.exit = tk.Button(errModal, text="Okay", command=errModal.destroy)
             errModal.exit.grid(row=1, column=0)
@@ -173,20 +195,27 @@ class RankTags(tk.Toplevel):
         try:
             tags = self.queryQueue.get(0)
             tagsListModal = tk.Toplevel()
+            tagsListModal.focus()
             tagsListModal.resizable(False, False)
+            tagsListModal.bind("<Escape>", self.exit)
+            tagsListModal.bind("<Return>", self.exit)
 
-            uniqTags = []
-            counterTags = Counter(tags)
-            for uniqTag in counterTags.keys():
-                uniqTags.append("%s %s" % (counterTags[uniqTag], uniqTag))
+            if len(tags) == 0:
+                tagsListModal.error = tk.Label(tagsListModal, text="\nNo tags found for search\n\n", justify="center", width=48)
+                tagsListModal.error.grid(row=0, column=0)
+            else:
+                uniqTags = []
+                counterTags = Counter(tags)
+                for uniqTag in counterTags.keys():
+                    uniqTags.append("%s %s" % (counterTags[uniqTag], uniqTag))
 
-            uniqTags.sort(key=numericSort, reverse=True)
+                uniqTags.sort(key=numericSort, reverse=True)
 
-            tagsListModal.tagList = tk.Listbox(tagsListModal, width=48, height=20)
-            for tag in uniqTags:
-                tagsListModal.tagList.insert("end", tag)
+                tagsListModal.tagList = tk.Listbox(tagsListModal, width=48, height=20)
+                for tag in uniqTags:
+                    tagsListModal.tagList.insert("end", tag)
 
-            tagsListModal.tagList.grid(row=0, column=0)
+                tagsListModal.tagList.grid(row=0, column=0)
             tagsListModal.exit = tk.Button(tagsListModal, text="Done", command=tagsListModal.destroy)
             tagsListModal.exit.grid(row=1, column=0)
 
@@ -204,6 +233,7 @@ class RankTags(tk.Toplevel):
     def addTag(self, *args):
         tag = self.tagsEntry.get()
 
-        self.tagsList.insert("end", tag)
+        if len(tag) > 0:
+            self.tagsList.insert("end", tag)
 
         self.tagsEntry.delete(first=0, last="end")

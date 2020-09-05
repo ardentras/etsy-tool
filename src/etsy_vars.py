@@ -7,6 +7,6 @@ try:
 except:
     print("could not read api key")
 
-api_key = etsy_api_key if len(etsy_api_key) > 0 else os.getenv("ETSY_API_KEY")
+api_key = os.getenv("ETSY_API_KEY", default=etsy_api_key)
 page_limit = 25
 maxreq = 5000

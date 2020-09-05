@@ -10,6 +10,18 @@ def ctlA():
     else:
         return "<Control-a>"
 
+def ctlEnter():
+    if platform.system() == "Darwin":
+        return "<Command-Return>"
+    else:
+        return "<Control-Return>"
+
+def getCtlShort():
+    if platform.system() == "Darwin":
+        return "Cmd"
+    else:
+        return "Ctl"
+
 def select_all(widget):
     # select text
     widget.select_range(0, 'end')

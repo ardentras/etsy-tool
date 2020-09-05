@@ -50,9 +50,15 @@ class GetTags(tk.Toplevel):
         self.tagsEntryMaxLen = 1024
 
         self.master = master
+        self.focus()
         self.resizable(False, False)
         self.title("Rank Tags")
+        self.bind("<Return>", self.runQuery)
+        self.bind("<Escape>", self.exit)
         self.create_widgets()
+
+    def exit(self, event):
+        event.widget.destroy()
 
     def create_widgets(self):
         titlerow=0
@@ -63,7 +69,6 @@ class GetTags(tk.Toplevel):
         self.idL = tk.Label(self, text="Listing ID / URL:", fg="black", bg="white")
         self.idL.grid(row=labelrow, column=0, sticky="e")
         self.idEntry = tk.Entry(self, takefocus=True, width=32)
-        self.idEntry.bind("<Return>", self.runQuery)
         self.idEntry.bind(helpers.ctlA(), helpers.selectAllCallback)
         self.idEntry.grid(row=labelrow, column=1, columnspan=3)
 
@@ -91,32 +96,46 @@ class GetTags(tk.Toplevel):
         
     def getHelp(self, *args):
         helpModal = tk.Toplevel()
+        helpModal.focus()
         helpModal.resizable(False, False)
+        helpModal.bind("<Escape>", self.exit)
+        helpModal.bind("<Return>", self.exit)
         helpModal.title("Help: Retrieve Tags")
 
         infotext="""
-        Enter the Listing ID or URL to retreive all tags for a listing.
+Enter the Listing ID or URL to retreive all tags for a listing.
 
-        The listing ID is the number immediately following etsy.com/listing/
-        in the address bar.
+The listing ID is the number immediately following etsy.com/listing/
+in the address bar.
         """
-        helpModal.info = tk.Label(helpModal, text=infotext, justify="left")
-        helpModal.info.grid(row=0, column=0)
+        hotkeytext="""
+Hotkeys:
+Press <Return> to submit the query
+Press <Escape> to exit subcommand
+        """
+        helpModal.info = tk.Label(helpModal, text=infotext, justify="left", padx=15)
+        helpModal.info.grid(row=0, column=0, sticky="ew")
+        helpModal.info = tk.Label(helpModal, text=hotkeytext, justify="center", padx=15)
+        helpModal.info.grid(row=1, column=0, sticky="ew")
 
         helpModal.exit = tk.Button(helpModal, text="Back", command=helpModal.destroy)
-        helpModal.exit.grid(row=1, column=0)
+        helpModal.exit.grid(row=2, column=0)
 
     def runQuery(self, *args):
         if len(self.idEntry.get()) == 0:
             errModal = tk.Toplevel()
+            errModal.focus()
             errModal.resizable(False, False)
+            errModal.bind("<Escape>", self.exit)
+            errModal.bind("<Return>", self.exit)
             errModal.title("Error")
 
             infotext="""
-            No tags provided. Please enter at least one tag to query.
+No listing ID provided. 
+Please enter an ID to query.
             """
-            errModal.info = tk.Label(errModal, text=infotext, justify="left")
-            errModal.info.grid(row=0, column=0)
+            errModal.info = tk.Label(errModal, text=infotext, justify="center", padx=15)
+            errModal.info.grid(row=0, column=0, sticky="ew")
 
             errModal.exit = tk.Button(errModal, text="Okay", command=errModal.destroy)
             errModal.exit.grid(row=1, column=0)
