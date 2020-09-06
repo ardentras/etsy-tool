@@ -9,6 +9,7 @@
 import src.etsy_vars as ev
 import src.get_tags as get_tags
 import src.rank_tags as rank_tags
+import src.get_price as get_price
 
 import os
 import re
@@ -37,16 +38,18 @@ class Application(tk.Frame):
         self.ranktags.grid(row=2, column=0)
         self.gettags = tk.Button(self, text="Retreive Tags", fg="black", command=self.runGetTags)
         self.gettags.grid(row=3, column=0)
+        self.getprice = tk.Button(self, text="Retreive Price", fg="black", command=self.runGetPrice)
+        self.getprice.grid(row=4, column=0)
 
         self.aSpacer2 = tk.Frame(self, height=50)
-        self.aSpacer2.grid(row=4, column=0)
+        self.aSpacer2.grid(row=5, column=0)
         self.quit = tk.Button(self, text="QUIT", fg="red", command=self.master.destroy)
-        self.quit.grid(row=5, column=0)
+        self.quit.grid(row=6, column=0)
 
         self.aSpacer3 = tk.Frame(self, height=10)
-        self.aSpacer3.grid(row=6, column=0)
+        self.aSpacer3.grid(row=7, column=0)
         self.requestsUsed = tk.Label(self, font=(None, 10), text="0 / %d requests used (0%%)" % (ev.maxreq), )
-        self.requestsUsed.grid(row=7, column=0)
+        self.requestsUsed.grid(row=8, column=0)
         self.updateRequestCountWidget()
 
     def updateRequestCountWidget(self):
@@ -66,3 +69,6 @@ class Application(tk.Frame):
 
     def runGetTags(self):
         self.gettags = get_tags.GetTags(self)
+    
+    def runGetPrice(self):
+        self.getprice = get_price.GetPrice(self)

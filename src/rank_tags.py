@@ -161,7 +161,7 @@ Press <Escape> to exit subcommand
         helpModal.info.grid(row=1, column=0, sticky="ew")
 
         helpModal.exit = tk.Button(helpModal, text="Back", command=helpModal.destroy)
-        helpModal.exit.grid(row=1, column=0)
+        helpModal.exit.grid(row=2, column=0)
 
     def runQuery(self, *args):
         if len(self.tagsList.get(0, "end")) == 0:
