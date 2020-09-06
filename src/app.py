@@ -31,8 +31,8 @@ class Application(tk.Frame):
 
     def create_widgets(self):
         currRow = 0
-        self.title = tk.Label(self, text="Etsy Tool")
-        self.title.grid(row=currRow, column=0)
+        self.titleL = tk.Label(self, text="Etsy Tool")
+        self.titleL.grid(row=currRow, column=0)
         currRow = currRow + 1
         self.aSpacer = tk.Frame(self, height=10)
         self.aSpacer.grid(row=currRow, column=0)

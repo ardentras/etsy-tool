@@ -99,8 +99,8 @@ class RankTags(tk.Toplevel):
 
     def create_widgets(self):
         currRow = 0
-        self.title = tk.Label(self, text="Rank Tags", fg="black", bg="white")
-        self.title.grid(row=currRow, column=0, columnspan=5)
+        self.titleL = tk.Label(self, text="Rank Tags", fg="black", bg="white")
+        self.titleL.grid(row=currRow, column=0, columnspan=5)
 
         currRow=currRow+1
         self.pagesL = tk.Label(self, text="# Pages:")

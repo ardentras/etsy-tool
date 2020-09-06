@@ -82,8 +82,8 @@ class GetTags(tk.Toplevel):
 
     def create_widgets(self):
         currRow=0
-        self.title = tk.Label(self, text="Retrieve Info From Listing", fg="black", bg="white")
-        self.title.grid(row=currRow, column=0, columnspan=5)
+        self.titleL = tk.Label(self, text="Retrieve Info From Listing", fg="black", bg="white")
+        self.titleL.grid(row=currRow, column=0, columnspan=5)
 
         currRow=currRow+1
         self.idL = tk.Label(self, text="Listing ID / URL:", fg="black", bg="white")
