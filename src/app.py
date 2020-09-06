@@ -30,26 +30,35 @@ class Application(tk.Frame):
         self.pack()
 
     def create_widgets(self):
+        currRow = 0
         self.title = tk.Label(self, text="Etsy Tool")
-        self.title.grid(row=0, column=0)
+        self.title.grid(row=currRow, column=0)
+        currRow = currRow + 1
         self.aSpacer = tk.Frame(self, height=10)
-        self.aSpacer.grid(row=1, column=0)
+        self.aSpacer.grid(row=currRow, column=0)
         self.ranktags = tk.Button(self, text="Rank Tags", fg="black", command=self.runRankTags)
-        self.ranktags.grid(row=2, column=0)
+        self.ranktags.grid(row=currRow, column=0)
+        currRow = currRow + 1
         self.gettags = tk.Button(self, text="Retreive Tags", fg="black", command=self.runGetTags)
-        self.gettags.grid(row=3, column=0)
+        self.gettags.grid(row=currRow, column=0)
+        currRow = currRow + 1
         self.getprice = tk.Button(self, text="Retreive Price", fg="black", command=self.runGetPrice)
-        self.getprice.grid(row=4, column=0)
+        self.getprice.grid(row=currRow, column=0)
+        currRow = currRow + 1
 
         self.aSpacer2 = tk.Frame(self, height=25)
-        self.aSpacer2.grid(row=5, column=0)
+        self.aSpacer2.grid(row=currRow, column=0)
+        currRow = currRow + 1
         self.quit = tk.Button(self, text="QUIT", fg="red", command=self.master.destroy)
-        self.quit.grid(row=6, column=0)
+        self.quit.grid(row=currRow, column=0)
+        currRow = currRow + 1
 
         self.aSpacer3 = tk.Frame(self, height=10)
-        self.aSpacer3.grid(row=7, column=0)
+        self.aSpacer3.grid(row=currRow, column=0)
+        currRow = currRow + 1
         self.requestsUsed = tk.Label(self, font=(None, 10), text="0 / %d requests used (0%%)" % (ev.maxreq), )
-        self.requestsUsed.grid(row=8, column=0)
+        self.requestsUsed.grid(row=currRow, column=0)
+        currRow = currRow + 1
         self.updateRequestCountWidget()
 
     def updateRequestCountWidget(self):

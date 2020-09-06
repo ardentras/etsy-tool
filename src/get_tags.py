@@ -61,40 +61,41 @@ class GetTags(tk.Toplevel):
         event.widget.winfo_toplevel().destroy()
 
     def create_widgets(self):
-        titlerow=0
+        currRow=0
         self.title = tk.Label(self, text="Retrieve Tags From Listing", fg="black", bg="white")
-        self.title.grid(row=titlerow, column=0, columnspan=5)
+        self.title.grid(row=currRow, column=0, columnspan=5)
 
-        labelrow=titlerow+1
+        currRow=currRow+1
         self.idL = tk.Label(self, text="Listing ID / URL:", fg="black", bg="white")
-        self.idL.grid(row=labelrow, column=0, sticky="e")
+        self.idL.grid(row=currRow, column=0, sticky="e")
         self.idEntry = tk.Entry(self, takefocus=True, width=32)
         self.idEntry.bind(helpers.ctlA(), helpers.selectAllCallback)
-        self.idEntry.grid(row=labelrow, column=1, columnspan=3)
+        self.idEntry.grid(row=currRow, column=1, columnspan=3)
 
-        linkrow=labelrow+1
+        currRow=currRow+1
         self.link = tk.Label(self, text="", fg="blue", cursor="hand1", justify="left")
-        self.link.grid(row=linkrow, column=1, columnspan=4)
+        self.link.grid(row=currRow, column=1, columnspan=4)
         
-        listrow=linkrow+1
+        currRow=currRow+1
         self.tagsList = tk.Listbox(self, width=48, height=15, selectmode="extended")
-        self.tagsList.grid(row=listrow, column=0, columnspan=5)
+        self.tagsList.grid(row=currRow, column=0, columnspan=5)
 
-        loadingrow=listrow+1
+        currRow=currRow+1
         self.loading = ttk.Progressbar(self)
-        self.loading.grid(row=loadingrow, column=0, columnspan=5)
+        self.loading.grid(row=currRow, column=0, columnspan=5)
         # the load_bar needs to be configured for indeterminate amount of bouncing
         self.loading.config(mode='determinate', maximum=100, value=0, length = 400)
 
-        buttonsrow=loadingrow+1
+        currRow=currRow+1
         self.help = tk.Button(self, text="Help", fg="red", command=self.getHelp)
-        self.help.grid(row=buttonsrow, column=0)
+        self.help.grid(row=currRow, column=0)
         self.quit = tk.Button(self, text="Go Back", fg="red", command=self.destroy)
-        self.quit.grid(row=buttonsrow, column=1, sticky="ew")
+        self.quit.grid(row=currRow, column=1, sticky="ew")
         self.submit = tk.Button(self, text="Get Tags", fg="red", command=self.runQuery)
-        self.submit.grid(row=buttonsrow, column=3, sticky="ew")
+        self.submit.grid(row=currRow, column=3, sticky="ew")
         
     def getHelp(self, *args):
+        currRow=0
         helpModal = tk.Toplevel()
         helpModal.focus()
         helpModal.resizable(False, False)
@@ -114,15 +115,18 @@ Press <Return> to submit the query
 Press <Escape> to exit subcommand
         """
         helpModal.info = tk.Label(helpModal, text=infotext, justify="left", padx=15)
-        helpModal.info.grid(row=0, column=0, sticky="ew")
+        helpModal.info.grid(row=currRow, column=0, sticky="ew")
+        currRow=currRow+1
         helpModal.info = tk.Label(helpModal, text=hotkeytext, justify="center", padx=15)
-        helpModal.info.grid(row=1, column=0, sticky="ew")
+        helpModal.info.grid(row=currRow, column=0, sticky="ew")
 
+        currRow=currRow+1
         helpModal.exit = tk.Button(helpModal, text="Back", command=helpModal.destroy)
-        helpModal.exit.grid(row=2, column=0)
+        helpModal.exit.grid(row=currRow, column=0)
 
     def runQuery(self, *args):
         if len(self.idEntry.get()) == 0:
+            currRow=0
             errModal = tk.Toplevel()
             errModal.focus()
             errModal.resizable(False, False)
@@ -135,10 +139,11 @@ No listing ID provided.
 Please enter an ID to query.
             """
             errModal.info = tk.Label(errModal, text=infotext, justify="center", padx=15)
-            errModal.info.grid(row=0, column=0, sticky="ew")
+            errModal.info.grid(row=currRow, column=0, sticky="ew")
 
+            currRow=currRow+1
             errModal.exit = tk.Button(errModal, text="Okay", command=errModal.destroy)
-            errModal.exit.grid(row=1, column=0)
+            errModal.exit.grid(row=currRow, column=0)
 
             return
 	

@@ -98,50 +98,51 @@ class RankTags(tk.Toplevel):
         event.widget.winfo_toplevel().destroy()
 
     def create_widgets(self):
-        titlerow=0
+        currRow = 0
         self.title = tk.Label(self, text="Rank Tags", fg="black", bg="white")
-        self.title.grid(row=titlerow, column=0, columnspan=5)
+        self.title.grid(row=currRow, column=0, columnspan=5)
 
-        pagerow=titlerow+1
+        currRow=currRow+1
         self.pagesL = tk.Label(self, text="# Pages:")
-        self.pagesL.grid(row=pagerow, column=0, sticky="e")
+        self.pagesL.grid(row=currRow, column=0, sticky="e")
         self.pageEntry = tk.Spinbox(self, from_=1, to=100, width=3)
-        self.pageEntry.grid(row=pagerow, column=1, sticky="w")
+        self.pageEntry.grid(row=currRow, column=1, sticky="w")
 
-        labelrow=pagerow+1
+        currRow=currRow+1
         self.tagsL = tk.Label(self, text="Tag:", fg="black", bg="white")
-        self.tagsL.grid(row=labelrow, column=0, sticky="e")
+        self.tagsL.grid(row=currRow, column=0, sticky="e")
         self.tagsEntry = tk.Entry(self, takefocus=True, width=32)
         self.tagsEntry.bind("<Return>", self.addTag)
         self.tagsEntry.bind(helpers.ctlA(), helpers.selectAllCallback)
-        self.tagsEntry.grid(row=labelrow, column=1, columnspan=3)
+        self.tagsEntry.grid(row=currRow, column=1, columnspan=3)
         self.tagButton = tk.Button(self, text="Add Tag", command=self.addTag)
-        self.tagButton.grid(row=labelrow, column=4)
+        self.tagButton.grid(row=currRow, column=4)
         
-        listrow=labelrow+1
+        currRow=currRow+1
         self.tagsList = tk.Listbox(self, width=48)
         self.tagsList.bind("<Double-Button-1>", self.removeTag)
-        self.tagsList.grid(row=listrow, column=0, columnspan=5)
+        self.tagsList.grid(row=currRow, column=0, columnspan=5)
         self.scrollbar = tk.Scrollbar(self, orient="vertical")
-        self.scrollbar.grid(row=listrow, column=5, sticky="nese")
+        self.scrollbar.grid(row=currRow, column=5, sticky="nese")
         self.tagsList.config(yscrollcommand=self.scrollbar.set)
         self.scrollbar.config(command=self.tagsList.yview)
 
-        loadingrow=listrow+1
+        currRow=currRow+1
         self.loading = ttk.Progressbar(self)
-        self.loading.grid(row=loadingrow, column=0, columnspan=5)
+        self.loading.grid(row=currRow, column=0, columnspan=5)
         # the load_bar needs to be configured for indeterminate amount of bouncing
         self.loading.config(mode='determinate', maximum=100, value=0, length = 400)
 
-        buttonsrow=loadingrow+1
+        currRow=currRow+1
         self.help = tk.Button(self, text="Help", fg="red", command=self.getHelp)
-        self.help.grid(row=buttonsrow, column=0)
+        self.help.grid(row=currRow, column=0)
         self.quit = tk.Button(self, text="Go Back", fg="red", command=self.destroy)
-        self.quit.grid(row=buttonsrow, column=1, sticky="ew")
+        self.quit.grid(row=currRow, column=1, sticky="ew")
         self.submit = tk.Button(self, text="Get Tags", fg="red", command=self.runQuery)
-        self.submit.grid(row=buttonsrow, column=3, sticky="ew")
+        self.submit.grid(row=currRow, column=3, sticky="ew")
 
     def getHelp(self, *args):
+        currRow = 0
         helpModal = tk.Toplevel()
         helpModal.focus()
         helpModal.resizable(False, False)
@@ -163,15 +164,18 @@ Press <%s + Return> to submit the query
 Press <Escape> to exit subcommand
         """ % (helpers.getCtlShort())
         helpModal.info = tk.Label(helpModal, text=infotext, justify="left", padx=15)
-        helpModal.info.grid(row=0, column=0, sticky="ew")
+        helpModal.info.grid(row=currRow, column=0, sticky="ew")
+        currRow=currRow+1
         helpModal.info = tk.Label(helpModal, text=hotkeytext, justify="center", padx=15)
-        helpModal.info.grid(row=1, column=0, sticky="ew")
+        helpModal.info.grid(row=currRow, column=0, sticky="ew")
 
+        currRow=currRow+1
         helpModal.exit = tk.Button(helpModal, text="Back", command=helpModal.destroy)
-        helpModal.exit.grid(row=2, column=0)
+        helpModal.exit.grid(row=currRow, column=0)
 
     def runQuery(self, *args):
         if len(self.tagsList.get(0, "end")) == 0:
+            currRow = 0
             errModal = tk.Toplevel()
             errModal.focus()
             errModal.resizable(False, False)
@@ -184,10 +188,11 @@ No tags provided.
 Please enter at least one tag to query.
             """
             errModal.info = tk.Label(errModal, text=infotext, justify="center", padx=15)
-            errModal.info.grid(row=0, column=0, sticky="ew")
+            errModal.info.grid(row=currRow, column=0, sticky="ew")
 
+            currRow=currRow+1
             errModal.exit = tk.Button(errModal, text="Okay", command=errModal.destroy)
-            errModal.exit.grid(row=1, column=0)
+            errModal.exit.grid(row=currRow, column=0)
 
             return
 
@@ -200,19 +205,21 @@ Please enter at least one tag to query.
 
     def processQuery(self):
         try:
+            currRow = 0
             tags = self.queryQueue.get(0)
             tagsListModal = tk.Toplevel()
             tagsListModal.focus()
             tagsListModal.resizable(False, False)
             tagsListModal.bind("<Escape>", self.exit)
             tagsListModal.bind("<Return>", self.exit)
+            tagsListModal.title("Tag List")
 
             if len(tags) == 0:
                 tagsListModal.error = tk.Label(tagsListModal, text="\nNo tags found for search\n\n", justify="center", width=48)
-                tagsListModal.error.grid(row=0, column=0)
+                tagsListModal.error.grid(row=currRow, column=0)
             else:
                 tagsListModal.good = tk.Label(tagsListModal, text="Rank Tags results\n", justify="center", width=48)
-                tagsListModal.good.grid(row=0, column=0)
+                tagsListModal.good.grid(row=currRow, column=0)
 
                 uniqTags = []
                 counterTags = Counter(tags)
@@ -225,15 +232,17 @@ Please enter at least one tag to query.
                 for tag in uniqTags:
                     tagsListModal.tagList.insert("end", "   " + tag)
 
-                tagsListModal.tagList.grid(row=1, column=0)
+                currRow=currRow+1
+                tagsListModal.tagList.grid(row=currRow, column=0)
 
                 tagsListModal.scrollbar = tk.Scrollbar(tagsListModal, orient="vertical")
-                tagsListModal.scrollbar.grid(row=1, column=1, sticky="nese")
+                tagsListModal.scrollbar.grid(row=currRow, column=1, sticky="nese")
                 tagsListModal.tagList.config(yscrollcommand=tagsListModal.scrollbar.set)
                 tagsListModal.scrollbar.config(command=tagsListModal.tagList.yview)
 
+            currRow=currRow+1
             tagsListModal.exit = tk.Button(tagsListModal, text="Done", command=tagsListModal.destroy)
-            tagsListModal.exit.grid(row=2, column=0)
+            tagsListModal.exit.grid(row=currRow, column=0)
 
             self.loading.stop()
 

@@ -65,53 +65,54 @@ class GetPrice(tk.Toplevel):
         event.widget.winfo_toplevel().destroy()
 
     def create_widgets(self):
-        titlerow=0
+        currRow=0
         self.title = tk.Label(self, text="Retrieve Price From Listing", fg="black", bg="white")
-        self.title.grid(row=titlerow, column=0, columnspan=5)
+        self.title.grid(row=currRow, column=0, columnspan=5)
 
-        labelrow=titlerow+1
+        currRow=currRow+1
         self.urlL = tk.Label(self, text="Listing URL:", fg="black", bg="white")
-        self.urlL.grid(row=labelrow, column=0, sticky="e")
+        self.urlL.grid(row=currRow, column=0, sticky="e")
         self.urlEntry = tk.Entry(self, takefocus=True, width=32)
         self.urlEntry.bind(helpers.ctlA(), helpers.selectAllCallback)
         self.urlEntry.bind("<Return>", self.runQuery)
-        self.urlEntry.grid(row=labelrow, column=1, columnspan=3)
+        self.urlEntry.grid(row=currRow, column=1, columnspan=3)
 
-        titlerow=labelrow+1
+        currRow=currRow+1
         self.listingTitle = tk.Label(self, text="")
-        self.listingTitle.grid(row=titlerow, column=1, columnspan=4)
+        self.listingTitle.grid(row=currRow, column=1, columnspan=4)
 
-        linkrow=titlerow+1
+        currRow=currRow+1
         self.link = tk.Label(self, text="", fg="blue", cursor="hand1", justify="left")
-        self.link.grid(row=linkrow, column=1, columnspan=4)
+        self.link.grid(row=currRow, column=1, columnspan=4)
         
-        pricerow=linkrow+1
+        currRow=currRow+1
         self.sold = tk.Label(self, text="Sold for: ", justify="right")
-        self.sold.grid(row=pricerow, column=1, columnspan=1)
+        self.sold.grid(row=currRow, column=1, columnspan=1)
         self.priceHigh = tk.Label(self, text="")
-        self.priceHigh.grid(row=pricerow, column=2, columnspan=1)
+        self.priceHigh.grid(row=currRow, column=2, columnspan=1)
         self.priceLow = tk.Label(self, text="")
-        self.priceLow.grid(row=pricerow, column=3, columnspan=1)
+        self.priceLow.grid(row=currRow, column=3, columnspan=1)
 
-        spacerrow=pricerow+1
+        currRow=currRow+1
         self.aSpacer = tk.Frame(self, height=10)
-        self.aSpacer.grid(row=spacerrow, column=0)
+        self.aSpacer.grid(row=currRow, column=0)
 
-        loadingrow=spacerrow+1
+        currRow=currRow+1
         self.loading = ttk.Progressbar(self)
-        self.loading.grid(row=loadingrow, column=0, columnspan=5)
+        self.loading.grid(row=currRow, column=0, columnspan=5)
         # the load_bar needs to be configured for indeterminate amount of bouncing
         self.loading.config(mode='determinate', maximum=100, value=0, length = 400)
 
-        buttonsrow=loadingrow+1
+        currRow=currRow+1
         self.help = tk.Button(self, text="Help", fg="red", command=self.getHelp)
-        self.help.grid(row=buttonsrow, column=0)
+        self.help.grid(row=currRow, column=0)
         self.quit = tk.Button(self, text="Go Back", fg="red", command=self.destroy)
-        self.quit.grid(row=buttonsrow, column=1, sticky="ew")
+        self.quit.grid(row=currRow, column=1, sticky="ew")
         self.submit = tk.Button(self, text="Get Price", fg="red", command=self.runQuery)
-        self.submit.grid(row=buttonsrow, column=3, sticky="ew")
+        self.submit.grid(row=currRow, column=3, sticky="ew")
         
     def getHelp(self, *args):
+        currRow=0
         helpModal = tk.Toplevel()
         helpModal.focus()
         helpModal.resizable(False, False)
@@ -128,15 +129,18 @@ Press <Return> to submit the query
 Press <Escape> to exit subcommand
         """
         helpModal.info = tk.Label(helpModal, text=infotext, justify="left", padx=15)
-        helpModal.info.grid(row=0, column=0, sticky="ew")
+        helpModal.info.grid(row=currRow, column=0, sticky="ew")
+        currRow=currRow+1
         helpModal.info = tk.Label(helpModal, text=hotkeytext, justify="center", padx=15)
-        helpModal.info.grid(row=1, column=0, sticky="ew")
+        helpModal.info.grid(row=currRow, column=0, sticky="ew")
 
+        currRow=currRow+1
         helpModal.exit = tk.Button(helpModal, text="Back", command=helpModal.destroy)
-        helpModal.exit.grid(row=2, column=0)
+        helpModal.exit.grid(row=currRow, column=0)
 
     def runQuery(self, *args):
         if len(self.urlEntry.get()) == 0:
+            currRow=0
             errModal = tk.Toplevel()
             errModal.focus()
             errModal.resizable(False, False)
@@ -149,10 +153,10 @@ No listing URL provided.
 Please enter an URL to query.
             """
             errModal.info = tk.Label(errModal, text=infotext, justify="center", padx=15)
-            errModal.info.grid(row=0, column=0, sticky="ew")
-
+            errModal.info.grid(row=currRow, column=0, sticky="ew")
+            currRow=currRow+1
             errModal.exit = tk.Button(errModal, text="Okay", command=errModal.destroy)
-            errModal.exit.grid(row=1, column=0)
+            errModal.exit.grid(row=currRow, column=0)
 
             return
     
