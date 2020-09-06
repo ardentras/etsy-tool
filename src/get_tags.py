@@ -7,6 +7,7 @@
 #
 
 from collections import Counter
+from datetime import datetime
 
 import src.etsy_vars as ev
 import src.helpers as helpers
@@ -26,7 +27,14 @@ class ThreadedEtsyGetTagsTask(threading.Thread):
         self.listingID = listingID
 
     def run(self):
-        tags = []
+        data = {}
+        data['title'] = ''
+        data['listing_id'] = 0
+        data['tags'] = []
+        data['views'] = 0
+        data['made'] = 0
+        data['sold'] = 0
+        data['failed'] = False
         try:
             params = {
                 'api_key': ev.api_key
@@ -37,12 +45,24 @@ class ThreadedEtsyGetTagsTask(threading.Thread):
             helpers.updateRequestCount(1)
 
             for result in response["results"]:
+                data['title'] = result['title'][:32]
+                if len(result['title']) > 32:
+                    data['title'] = data['title'] + '...'
+                data['listing_id'] = result['listing_id']
+                data['views'] = result['views']
+                data['made'] = result['original_creation_tsz']
+                if result['state'] == 'sold_out':
+                    data['sold'] = result['state_tsz']
+
                 for tag in result["tags"]:
-                    tags.append(tag)
+                    data['tags'].append(tag)
+
+                    
         except Exception as e:
+            data['failed'] = True
             print(e)
-                
-        self.queue.put(tags)
+
+        self.queue.put(data)
 
 class GetTags(tk.Toplevel):
     def __init__(self, master=None):
@@ -52,7 +72,7 @@ class GetTags(tk.Toplevel):
         self.master = master
         self.focus()
         self.resizable(False, False)
-        self.title("Rank Tags")
+        self.title("Get Listing Info")
         self.bind("<Return>", self.runQuery)
         self.bind("<Escape>", self.exit)
         self.create_widgets()
@@ -62,7 +82,7 @@ class GetTags(tk.Toplevel):
 
     def create_widgets(self):
         currRow=0
-        self.title = tk.Label(self, text="Retrieve Tags From Listing", fg="black", bg="white")
+        self.title = tk.Label(self, text="Retrieve Info From Listing", fg="black", bg="white")
         self.title.grid(row=currRow, column=0, columnspan=5)
 
         currRow=currRow+1
@@ -74,7 +94,15 @@ class GetTags(tk.Toplevel):
 
         currRow=currRow+1
         self.link = tk.Label(self, text="", fg="blue", cursor="hand1", justify="left")
-        self.link.grid(row=currRow, column=1, columnspan=4)
+        self.link.grid(row=currRow, column=0, columnspan=5)
+
+        currRow=currRow+1
+        self.viewsL = tk.Label(self, text="Views: n/a")
+        self.viewsL.grid(row=currRow, column=0)
+        self.createdL = tk.Label(self, text="")
+        self.createdL.grid(row=currRow, column=1, columnspan=2)
+        self.soldL = tk.Label(self, text="")
+        self.soldL.grid(row=currRow, column=3, columnspan=2)
         
         currRow=currRow+1
         self.tagsList = tk.Listbox(self, width=48, height=15, selectmode="extended")
@@ -84,14 +112,14 @@ class GetTags(tk.Toplevel):
         self.loading = ttk.Progressbar(self)
         self.loading.grid(row=currRow, column=0, columnspan=5)
         # the load_bar needs to be configured for indeterminate amount of bouncing
-        self.loading.config(mode='determinate', maximum=100, value=0, length = 400)
+        self.loading.config(mode='determinate', maximum=100, value=0, length = 434)
 
         currRow=currRow+1
         self.help = tk.Button(self, text="Help", fg="red", command=self.getHelp)
         self.help.grid(row=currRow, column=0)
         self.quit = tk.Button(self, text="Go Back", fg="red", command=self.destroy)
         self.quit.grid(row=currRow, column=1, sticky="ew")
-        self.submit = tk.Button(self, text="Get Tags", fg="red", command=self.runQuery)
+        self.submit = tk.Button(self, text="Get Info", fg="red", command=self.runQuery)
         self.submit.grid(row=currRow, column=3, sticky="ew")
         
     def getHelp(self, *args):
@@ -101,13 +129,14 @@ class GetTags(tk.Toplevel):
         helpModal.resizable(False, False)
         helpModal.bind("<Escape>", self.exit)
         helpModal.bind("<Return>", self.exit)
-        helpModal.title("Help: Retrieve Tags")
+        helpModal.title("Help: Get Listing Info")
 
         infotext="""
-Enter the Listing ID or URL to retreive all tags for a listing.
+Enter the Listing ID or URL to retrieve all tags, view count, creation, and
+sold date for a listing.
 
-The listing ID is the number immediately following etsy.com/listing/
-in the address bar.
+If a listing is unavailable and no sold date is shown, then the listing
+has been disabled or expired.
         """
         hotkeytext="""
 Hotkeys:
@@ -136,7 +165,7 @@ Press <Escape> to exit subcommand
 
             infotext="""
 No listing ID provided. 
-Please enter an ID to query.
+Please enter an ID or URL to query.
             """
             errModal.info = tk.Label(errModal, text=infotext, justify="center", padx=15)
             errModal.info.grid(row=currRow, column=0, sticky="ew")
@@ -147,6 +176,11 @@ Please enter an ID to query.
 
             return
 	
+        self.viewsL.configure(text="Views: n/a")
+        self.link.configure(text="", fg="blue", cursor="hand1")
+        self.createdL.configure(text="")
+        self.soldL.configure(text="")
+
         self.tagsList.delete(0, "end")
         listingID = self.idEntry.get()
         if listingID.find("listing/") >= 0:
@@ -161,15 +195,25 @@ Please enter an ID to query.
         ThreadedEtsyGetTagsTask(self.queryQueue, listingID).start()
         self.master.after(100, self.processQuery)
 
-        self.link.configure(text="View Listing #%s" % (listingID))
-        self.link.bind("<Button-1>", lambda e: webbrowser.open_new("https://www.etsy.com/listing/%s" % (listingID)))
-
     def processQuery(self):
         try:
-            tags = self.queryQueue.get(0)
+            data = self.queryQueue.get(0)
 
-            for tag in tags:
-                self.tagsList.insert("end", "   " + tag)
+            if data['failed']:
+                self.link.configure(text="Failed to retrieve listing", fg="red", cursor="arrow")
+            else:
+                self.link.configure(text="View Listing #%s: %s" % (data['listing_id'], data['title']))
+                self.link.bind("<Button-1>", lambda e: webbrowser.open_new("https://www.etsy.com/listing/%s" % (data['listing_id'])))
+
+                self.viewsL.configure(text='Views: %d' % (data['views']))
+                self.createdL.configure(text='Created: %s' % (datetime.fromtimestamp(data['made']).strftime('%m/%d/%Y')))
+                if data['sold'] > 0:
+                    self.soldL.configure(text='Sold: %s' % (datetime.fromtimestamp(data['sold']).strftime('%m/%d/%Y')))
+                else:
+                    self.soldL.configure(text='Not yet sold')
+
+                for tag in data['tags']:
+                    self.tagsList.insert("end", "   " + tag)
 
             self.loading.stop()
 

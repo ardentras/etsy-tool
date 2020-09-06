@@ -39,11 +39,11 @@ class Application(tk.Frame):
         self.ranktags = tk.Button(self, text="Rank Tags", fg="black", command=self.runRankTags)
         self.ranktags.grid(row=currRow, column=0)
         currRow = currRow + 1
-        self.gettags = tk.Button(self, text="Retreive Tags", fg="black", command=self.runGetTags)
-        self.gettags.grid(row=currRow, column=0)
-        currRow = currRow + 1
         self.getprice = tk.Button(self, text="Retreive Price", fg="black", command=self.runGetPrice)
         self.getprice.grid(row=currRow, column=0)
+        currRow = currRow + 1
+        self.gettags = tk.Button(self, text="Get Listing Info", fg="black", command=self.runGetTags)
+        self.gettags.grid(row=currRow, column=0)
         currRow = currRow + 1
 
         self.aSpacer2 = tk.Frame(self, height=25)
