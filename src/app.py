@@ -41,7 +41,7 @@ class Application(tk.Frame):
         self.getprice = tk.Button(self, text="Retreive Price", fg="black", command=self.runGetPrice)
         self.getprice.grid(row=4, column=0)
 
-        self.aSpacer2 = tk.Frame(self, height=50)
+        self.aSpacer2 = tk.Frame(self, height=25)
         self.aSpacer2.grid(row=5, column=0)
         self.quit = tk.Button(self, text="QUIT", fg="red", command=self.master.destroy)
         self.quit.grid(row=6, column=0)

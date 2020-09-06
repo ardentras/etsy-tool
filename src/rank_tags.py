@@ -33,9 +33,13 @@ class ThreadedEtsyRankTagsTask(threading.Thread):
         taglist = ""
 
         for tag in self.tags:
-            taglist = taglist + re.sub(r'[^A-Za-z0-9 ]+', '', tag).replace(" ", "+") + ","
+            tag = tag.lstrip()
+            tag = tag.rstrip()
+            taglist = taglist + re.sub(r'[^A-Za-z0-9 ]+', '', tag) + ","
 
         taglist = taglist[:-1]
+
+        print(taglist)  
 
         tags = []
         for i in range(int(self.pages)):
@@ -43,12 +47,13 @@ class ThreadedEtsyRankTagsTask(threading.Thread):
             params = {
                 'api_key': ev.api_key, 
                 'tags': taglist, 
-                'sort_on': 'score', 
+                'sort_on': 'score',
                 'limit': ev.page_limit, 
                 'offset': offset
             }
             try:
-                response = json.loads(requests.get("https://openapi.etsy.com/v2/listings/active", params).text)
+                thejson = requests.get("https://openapi.etsy.com/v2/listings/active", params).text
+                response = json.loads(thejson)
                 
                 helpers.updateRequestCount(1)
 
@@ -92,7 +97,7 @@ class RankTags(tk.Toplevel):
         self.create_widgets()
 
     def exit(self, event):
-        event.widget.destroy()
+        event.widget.winfo_toplevel().destroy()
 
     def create_widgets(self):
         titlerow=0
@@ -204,6 +209,9 @@ Please enter at least one tag to query.
                 tagsListModal.error = tk.Label(tagsListModal, text="\nNo tags found for search\n\n", justify="center", width=48)
                 tagsListModal.error.grid(row=0, column=0)
             else:
+                tagsListModal.good = tk.Label(tagsListModal, text="Rank Tags results\n", justify="center", width=48)
+                tagsListModal.good.grid(row=0, column=0)
+
                 uniqTags = []
                 counterTags = Counter(tags)
                 for uniqTag in counterTags.keys():
@@ -211,13 +219,13 @@ Please enter at least one tag to query.
 
                 uniqTags.sort(key=numericSort, reverse=True)
 
-                tagsListModal.tagList = tk.Listbox(tagsListModal, width=48, height=20)
+                tagsListModal.tagList = tk.Listbox(tagsListModal, width=48, height=20, selectmode="extended")
                 for tag in uniqTags:
-                    tagsListModal.tagList.insert("end", tag)
+                    tagsListModal.tagList.insert("end", "   " + tag)
 
-                tagsListModal.tagList.grid(row=0, column=0)
+                tagsListModal.tagList.grid(row=1, column=0)
             tagsListModal.exit = tk.Button(tagsListModal, text="Done", command=tagsListModal.destroy)
-            tagsListModal.exit.grid(row=1, column=0)
+            tagsListModal.exit.grid(row=2, column=0)
 
             self.loading.stop()
 
@@ -234,6 +242,6 @@ Please enter at least one tag to query.
         tag = self.tagsEntry.get()
 
         if len(tag) > 0:
-            self.tagsList.insert("end", tag)
+            self.tagsList.insert("end", "   " + tag)
 
         self.tagsEntry.delete(first=0, last="end")

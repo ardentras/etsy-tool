@@ -58,7 +58,7 @@ class GetTags(tk.Toplevel):
         self.create_widgets()
 
     def exit(self, event):
-        event.widget.destroy()
+        event.widget.winfo_toplevel().destroy()
 
     def create_widgets(self):
         titlerow=0
@@ -77,7 +77,7 @@ class GetTags(tk.Toplevel):
         self.link.grid(row=linkrow, column=1, columnspan=4)
         
         listrow=linkrow+1
-        self.tagsList = tk.Listbox(self, width=48, height=13)
+        self.tagsList = tk.Listbox(self, width=48, height=15, selectmode="extended")
         self.tagsList.grid(row=listrow, column=0, columnspan=5)
 
         loadingrow=listrow+1
@@ -164,7 +164,7 @@ Please enter an ID to query.
             tags = self.queryQueue.get(0)
 
             for tag in tags:
-                self.tagsList.insert("end", tag)
+                self.tagsList.insert("end", "   " + tag)
 
             self.loading.stop()
 

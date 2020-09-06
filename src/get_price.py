@@ -62,7 +62,7 @@ class GetPrice(tk.Toplevel):
         self.create_widgets()
 
     def exit(self, event):
-        event.widget.destroy()
+        event.widget.winfo_toplevel().destroy()
 
     def create_widgets(self):
         titlerow=0

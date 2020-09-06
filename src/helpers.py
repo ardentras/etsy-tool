@@ -29,7 +29,7 @@ def select_all(widget):
     widget.icursor('end')
 
 def selectAllCallback(event):
-    event.widget.master.after(10, select_all, event.widget)
+    event.widget.after(10, select_all, event.widget)
 
 def updateRequestCount(inc):
     found = False
