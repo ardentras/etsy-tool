@@ -13,5 +13,6 @@ clean-pycache:
 
 clean:
 	rm -rf build
+	rm -rf dist
 	rm .etsy-tool-*
 	rm -rf __pycache__

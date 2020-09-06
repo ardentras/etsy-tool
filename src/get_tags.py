@@ -149,15 +149,15 @@ Please enter an ID to query.
             end = listingID.find("/", start)
             listingID = listingID[start:end]
 
-        self.link.configure(text="View Listing #%s" % (listingID))
-        self.link.bind("<Button-1>", lambda e: webbrowser.open_new("https://www.etsy.com/listing/%s" % (listingID)))
-
         # 8 here is for speed of bounce
         self.loading.start()
 
         self.queryQueue = queue.Queue()
         ThreadedEtsyGetTagsTask(self.queryQueue, listingID).start()
         self.master.after(100, self.processQuery)
+
+        self.link.configure(text="View Listing #%s" % (listingID))
+        self.link.bind("<Button-1>", lambda e: webbrowser.open_new("https://www.etsy.com/listing/%s" % (listingID)))
 
     def processQuery(self):
         try:

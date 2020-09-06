@@ -74,6 +74,7 @@ class GetPrice(tk.Toplevel):
         self.urlL.grid(row=labelrow, column=0, sticky="e")
         self.urlEntry = tk.Entry(self, takefocus=True, width=32)
         self.urlEntry.bind(helpers.ctlA(), helpers.selectAllCallback)
+        self.urlEntry.bind("<Return>", self.runQuery)
         self.urlEntry.grid(row=labelrow, column=1, columnspan=3)
 
         titlerow=labelrow+1
@@ -92,7 +93,11 @@ class GetPrice(tk.Toplevel):
         self.priceLow = tk.Label(self, text="")
         self.priceLow.grid(row=pricerow, column=3, columnspan=1)
 
-        loadingrow=pricerow+1
+        spacerrow=pricerow+1
+        self.aSpacer = tk.Frame(self, height=10)
+        self.aSpacer.grid(row=spacerrow, column=0)
+
+        loadingrow=spacerrow+1
         self.loading = ttk.Progressbar(self)
         self.loading.grid(row=loadingrow, column=0, columnspan=5)
         # the load_bar needs to be configured for indeterminate amount of bouncing
@@ -163,15 +168,15 @@ Please enter an URL to query.
             end = url.find("/", start)
             listingID = url[start:end]
 
-        self.link.configure(text="View Listing #%s" % (listingID))
-        self.link.bind("<Button-1>", lambda e: webbrowser.open_new("https://www.etsy.com/listing/%s" % (listingID)))
-
         # 8 here is for speed of bounce
         self.loading.start()
 
         self.queryQueue = queue.Queue()
         ThreadedEtsyGetPriceTask(self.queryQueue, url).start()
         self.master.after(100, self.processQuery)
+
+        self.link.configure(text="View Listing #%s" % (listingID))
+        self.link.bind("<Button-1>", lambda e: webbrowser.open_new("https://www.etsy.com/listing/%s" % (listingID)))
 
     def processQuery(self):
         try:

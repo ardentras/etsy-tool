@@ -39,8 +39,6 @@ class ThreadedEtsyRankTagsTask(threading.Thread):
 
         taglist = taglist[:-1]
 
-        print(taglist)  
-
         tags = []
         for i in range(int(self.pages)):
             offset = i * ev.page_limit
@@ -124,6 +122,10 @@ class RankTags(tk.Toplevel):
         self.tagsList = tk.Listbox(self, width=48)
         self.tagsList.bind("<Double-Button-1>", self.removeTag)
         self.tagsList.grid(row=listrow, column=0, columnspan=5)
+        self.scrollbar = tk.Scrollbar(self, orient="vertical")
+        self.scrollbar.grid(row=listrow, column=5, sticky="nese")
+        self.tagsList.config(yscrollcommand=self.scrollbar.set)
+        self.scrollbar.config(command=self.tagsList.yview)
 
         loadingrow=listrow+1
         self.loading = ttk.Progressbar(self)
@@ -224,6 +226,12 @@ Please enter at least one tag to query.
                     tagsListModal.tagList.insert("end", "   " + tag)
 
                 tagsListModal.tagList.grid(row=1, column=0)
+
+                tagsListModal.scrollbar = tk.Scrollbar(tagsListModal, orient="vertical")
+                tagsListModal.scrollbar.grid(row=1, column=1, sticky="nese")
+                tagsListModal.tagList.config(yscrollcommand=tagsListModal.scrollbar.set)
+                tagsListModal.scrollbar.config(command=tagsListModal.tagList.yview)
+
             tagsListModal.exit = tk.Button(tagsListModal, text="Done", command=tagsListModal.destroy)
             tagsListModal.exit.grid(row=2, column=0)
 
@@ -243,5 +251,7 @@ Please enter at least one tag to query.
 
         if len(tag) > 0:
             self.tagsList.insert("end", "   " + tag)
+
+        self.scrollbar.config(command=self.tagsList.yview)
 
         self.tagsEntry.delete(first=0, last="end")
