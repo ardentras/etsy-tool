@@ -1,3 +1,12 @@
+###########################################################
+# Filename: helpers.py
+# Author: Shaun Rasmusen <shaunrasmusen@gmail.com>
+# Date: 09/04/2020
+#
+# Helper functions for common operations across different
+# subcommands.
+#
+
 from datetime import datetime
 import os
 import platform

@@ -1,3 +1,11 @@
+###########################################################
+# Filename: etsy_vars.py
+# Author: Shaun Rasmusen <shaunrasmusen@gmail.com>
+# Date: 09/04/2020
+#
+# Global variables for Esty API
+#
+
 import os
 
 etsy_api_key = ''

@@ -1,7 +1,7 @@
 ###########################################################
 # Filename: get_price.py
 # Author: Shaun Rasmusen <shaunrasmusen@gmail.com>
-# Date: 09/04/2020
+# Date: 09/05/2020
 #
 # GetPrice modal
 #
