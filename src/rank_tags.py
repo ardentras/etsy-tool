@@ -99,47 +99,60 @@ class RankTags(tk.Toplevel):
 
     def create_widgets(self):
         currRow = 0
-        self.titleL = tk.Label(self, text="Rank Tags", fg="black", bg="white")
-        self.titleL.grid(row=currRow, column=0, columnspan=5)
+        self.titleL = ttk.Label(self, text="Rank Tags", style='h2.TLabel')
+        self.titleL.grid(row=currRow, column=0, columnspan=9)
+        currRow = currRow + 1
+        self.aSpacer3 = tk.Frame(self, height=30)
+        self.aSpacer3.grid(row=currRow, column=0, columnspan=9)
 
         currRow=currRow+1
-        self.pagesL = tk.Label(self, text="# Pages:")
-        self.pagesL.grid(row=currRow, column=0, sticky="e")
+        self.pagesL = ttk.Label(self, text="# Pages:", style='p.TLabel')
+        self.pagesL.grid(row=currRow, column=1, sticky="e")
         self.pageEntry = tk.Spinbox(self, from_=1, to=100, width=3)
-        self.pageEntry.grid(row=currRow, column=1, sticky="w")
+        self.pageEntry.grid(row=currRow, column=3, sticky="w")
 
         currRow=currRow+1
-        self.tagsL = tk.Label(self, text="Tag:", fg="black", bg="white")
-        self.tagsL.grid(row=currRow, column=0, sticky="e")
-        self.tagsEntry = tk.Entry(self, takefocus=True, width=32)
+        self.tagsL = ttk.Label(self, text="Tag:", style='p.TLabel')
+        self.tagsL.grid(row=currRow, column=1, sticky="e")
+        self.tagsEntry = tk.Entry(self, takefocus=True, width=30)
         self.tagsEntry.bind("<Return>", self.addTag)
         self.tagsEntry.bind(helpers.ctlA(), helpers.selectAllCallback)
-        self.tagsEntry.grid(row=currRow, column=1, columnspan=3)
-        self.tagButton = tk.Button(self, text="Add Tag", command=self.addTag)
-        self.tagButton.grid(row=currRow, column=4)
+        self.tagsEntry.grid(row=currRow, column=3, columnspan=3)
+        self.tagButton = ttk.Button(self, text="Add Tag", command=self.addTag)
+        self.tagButton.grid(row=currRow, column=7, sticky="ew")
+
+        currRow = currRow + 1
+        self.aSpacer4 = tk.Frame(self, height=10)
+        self.aSpacer4.grid(row=currRow, column=0, columnspan=9)
         
         currRow=currRow+1
-        self.tagsList = tk.Listbox(self, width=48)
+        self.tagsList = tk.Listbox(self, width=57)
         self.tagsList.bind("<Double-Button-1>", self.removeTag)
-        self.tagsList.grid(row=currRow, column=0, columnspan=5)
+        self.tagsList.grid(row=currRow, column=1, columnspan=7)
         self.scrollbar = tk.Scrollbar(self, orient="vertical")
-        self.scrollbar.grid(row=currRow, column=5, sticky="nese")
+        self.scrollbar.grid(row=currRow, column=8, sticky="nese")
         self.tagsList.config(yscrollcommand=self.scrollbar.set)
         self.scrollbar.config(command=self.tagsList.yview)
 
         currRow=currRow+1
         self.loading = ttk.Progressbar(self)
-        self.loading.grid(row=currRow, column=0, columnspan=5)
+        self.loading.grid(row=currRow, column=1, columnspan=7)
         # the load_bar needs to be configured for indeterminate amount of bouncing
-        self.loading.config(mode='determinate', maximum=100, value=0, length = 400)
+        self.loading.config(mode='determinate', maximum=100, value=0, length = 515)
 
+        currRow = currRow + 1
+        self.aSpacer = tk.Frame(self, height=10)
+        self.aSpacer.grid(row=currRow, column=2)
         currRow=currRow+1
-        self.help = tk.Button(self, text="Help", fg="red", command=self.getHelp)
-        self.help.grid(row=currRow, column=0)
-        self.quit = tk.Button(self, text="Go Back", fg="red", command=self.destroy)
-        self.quit.grid(row=currRow, column=1, sticky="ew")
-        self.submit = tk.Button(self, text="Get Tags", fg="red", command=self.runQuery)
-        self.submit.grid(row=currRow, column=3, sticky="ew")
+        self.help = ttk.Button(self, text="Help", command=self.getHelp)
+        self.help.grid(row=currRow, column=1)
+        self.quit = ttk.Button(self, text="Go Back", command=self.destroy)
+        self.quit.grid(row=currRow, column=3, sticky="w")
+        self.submit = ttk.Button(self, text="Get Tags", command=self.runQuery)
+        self.submit.grid(row=currRow, column=7, sticky="ew")
+        currRow = currRow + 1
+        self.aSpacer2 = tk.Frame(self, height=10, width=15)
+        self.aSpacer2.grid(row=currRow, column=0)
 
     def getHelp(self, *args):
         currRow = 0
@@ -170,7 +183,7 @@ Press <Escape> to exit subcommand
         helpModal.info.grid(row=currRow, column=0, sticky="ew")
 
         currRow=currRow+1
-        helpModal.exit = tk.Button(helpModal, text="Back", command=helpModal.destroy)
+        helpModal.exit = ttk.Button(helpModal, text="Back", command=helpModal.destroy)
         helpModal.exit.grid(row=currRow, column=0)
 
     def runQuery(self, *args):
@@ -191,7 +204,7 @@ Please enter at least one tag to query.
             errModal.info.grid(row=currRow, column=0, sticky="ew")
 
             currRow=currRow+1
-            errModal.exit = tk.Button(errModal, text="Okay", command=errModal.destroy)
+            errModal.exit = ttk.Button(errModal, text="Okay", command=errModal.destroy)
             errModal.exit.grid(row=currRow, column=0)
 
             return
@@ -241,7 +254,7 @@ Please enter at least one tag to query.
                 tagsListModal.scrollbar.config(command=tagsListModal.tagList.yview)
 
             currRow=currRow+1
-            tagsListModal.exit = tk.Button(tagsListModal, text="Done", command=tagsListModal.destroy)
+            tagsListModal.exit = ttk.Button(tagsListModal, text="Done", command=tagsListModal.destroy)
             tagsListModal.exit.grid(row=currRow, column=0)
 
             self.loading.stop()

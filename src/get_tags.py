@@ -115,11 +115,11 @@ class GetTags(tk.Toplevel):
         self.loading.config(mode='determinate', maximum=100, value=0, length = 434)
 
         currRow=currRow+1
-        self.help = tk.Button(self, text="Help", fg="red", command=self.getHelp)
+        self.help = ttk.Button(self, text="Help", command=self.getHelp)
         self.help.grid(row=currRow, column=0)
-        self.quit = tk.Button(self, text="Go Back", fg="red", command=self.destroy)
+        self.quit = ttk.Button(self, text="Go Back", command=self.destroy)
         self.quit.grid(row=currRow, column=1, sticky="ew")
-        self.submit = tk.Button(self, text="Get Info", fg="red", command=self.runQuery)
+        self.submit = ttk.Button(self, text="Get Info", command=self.runQuery)
         self.submit.grid(row=currRow, column=3, sticky="ew")
         
     def getHelp(self, *args):
@@ -150,7 +150,7 @@ Press <Escape> to exit subcommand
         helpModal.info.grid(row=currRow, column=0, sticky="ew")
 
         currRow=currRow+1
-        helpModal.exit = tk.Button(helpModal, text="Back", command=helpModal.destroy)
+        helpModal.exit = ttk.Button(helpModal, text="Back", command=helpModal.destroy)
         helpModal.exit.grid(row=currRow, column=0)
 
     def runQuery(self, *args):
@@ -171,7 +171,7 @@ Please enter an ID or URL to query.
             errModal.info.grid(row=currRow, column=0, sticky="ew")
 
             currRow=currRow+1
-            errModal.exit = tk.Button(errModal, text="Okay", command=errModal.destroy)
+            errModal.exit = ttk.Button(errModal, text="Okay", command=errModal.destroy)
             errModal.exit.grid(row=currRow, column=0)
 
             return
@@ -200,7 +200,7 @@ Please enter an ID or URL to query.
             data = self.queryQueue.get(0)
 
             if data['failed']:
-                self.link.configure(text="Failed to retrieve listing", fg="red", cursor="arrow")
+                self.link.configure(text="Failed to retrieve listing", cursor="arrow")
             else:
                 self.link.configure(text="View Listing #%s: %s" % (data['listing_id'], data['title']))
                 self.link.bind("<Button-1>", lambda e: webbrowser.open_new("https://www.etsy.com/listing/%s" % (data['listing_id'])))

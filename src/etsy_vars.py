@@ -8,6 +8,10 @@
 
 import os
 
+orange="#f1651f"
+darkorange="#d14500"
+lightorange="#f1853f"
+
 etsy_api_key = ''
 try:
     with open('.api_key', 'r') as infile:

@@ -104,11 +104,11 @@ class GetPrice(tk.Toplevel):
         self.loading.config(mode='determinate', maximum=100, value=0, length = 400)
 
         currRow=currRow+1
-        self.help = tk.Button(self, text="Help", fg="red", command=self.getHelp)
+        self.help = ttk.Button(self, text="Help", command=self.getHelp)
         self.help.grid(row=currRow, column=0)
-        self.quit = tk.Button(self, text="Go Back", fg="red", command=self.destroy)
+        self.quit = ttk.Button(self, text="Go Back", command=self.destroy)
         self.quit.grid(row=currRow, column=1, sticky="ew")
-        self.submit = tk.Button(self, text="Get Price", fg="red", command=self.runQuery)
+        self.submit = ttk.Button(self, text="Get Price", command=self.runQuery)
         self.submit.grid(row=currRow, column=3, sticky="ew")
         
     def getHelp(self, *args):
@@ -135,7 +135,7 @@ Press <Escape> to exit subcommand
         helpModal.info.grid(row=currRow, column=0, sticky="ew")
 
         currRow=currRow+1
-        helpModal.exit = tk.Button(helpModal, text="Back", command=helpModal.destroy)
+        helpModal.exit = ttk.Button(helpModal, text="Back", command=helpModal.destroy)
         helpModal.exit.grid(row=currRow, column=0)
 
     def runQuery(self, *args):
@@ -155,7 +155,7 @@ Please enter an URL to query.
             errModal.info = tk.Label(errModal, text=infotext, justify="center", padx=15)
             errModal.info.grid(row=currRow, column=0, sticky="ew")
             currRow=currRow+1
-            errModal.exit = tk.Button(errModal, text="Okay", command=errModal.destroy)
+            errModal.exit = ttk.Button(errModal, text="Okay", command=errModal.destroy)
             errModal.exit.grid(row=currRow, column=0)
 
             return
