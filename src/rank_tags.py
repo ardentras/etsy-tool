@@ -226,13 +226,17 @@ Please enter at least one tag to query.
             tagsListModal.bind("<Escape>", self.exit)
             tagsListModal.bind("<Return>", self.exit)
             tagsListModal.title("Tag List")
+            tagsListModal.titleL = ttk.Label(tagsListModal, text="Results\n", style='h2.TLabel')
+            tagsListModal.titleL.grid(row=currRow, column=1)
+            currRow=currRow+1
+            tagsListModal.aSpacer3 = tk.Frame(tagsListModal, height=20)
+            tagsListModal.aSpacer3.grid(row=currRow, column=0)
 
             if len(tags) == 0:
-                tagsListModal.error = tk.Label(tagsListModal, text="\nNo tags found for search\n\n", justify="center", width=48)
-                tagsListModal.error.grid(row=currRow, column=0)
+                currRow=currRow+1
+                tagsListModal.error = ttk.Label(tagsListModal, text="\nNo tags found for search\n\n", style='p.TLabel')
+                tagsListModal.error.grid(row=currRow, column=1)
             else:
-                tagsListModal.good = tk.Label(tagsListModal, text="Rank Tags results\n", justify="center", width=48)
-                tagsListModal.good.grid(row=currRow, column=0)
 
                 uniqTags = []
                 counterTags = Counter(tags)
@@ -246,16 +250,22 @@ Please enter at least one tag to query.
                     tagsListModal.tagList.insert("end", "   " + tag)
 
                 currRow=currRow+1
-                tagsListModal.tagList.grid(row=currRow, column=0)
+                tagsListModal.tagList.grid(row=currRow, column=1)
 
                 tagsListModal.scrollbar = tk.Scrollbar(tagsListModal, orient="vertical")
-                tagsListModal.scrollbar.grid(row=currRow, column=1, sticky="nese")
+                tagsListModal.scrollbar.grid(row=currRow, column=2, sticky="nese")
                 tagsListModal.tagList.config(yscrollcommand=tagsListModal.scrollbar.set)
                 tagsListModal.scrollbar.config(command=tagsListModal.tagList.yview)
 
             currRow=currRow+1
+            tagsListModal.aSpacer2 = tk.Frame(tagsListModal, height=10, width=15)
+            tagsListModal.aSpacer2.grid(row=currRow, column=0)
+            currRow=currRow+1
             tagsListModal.exit = ttk.Button(tagsListModal, text="Done", command=tagsListModal.destroy)
-            tagsListModal.exit.grid(row=currRow, column=0)
+            tagsListModal.exit.grid(row=currRow, column=1)
+            currRow = currRow + 1
+            tagsListModal.aSpacer = tk.Frame(tagsListModal, height=10)
+            tagsListModal.aSpacer.grid(row=currRow, column=2)
 
             self.loading.stop()
 
