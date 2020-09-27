@@ -40,6 +40,7 @@ class Application(tk.Frame):
         self.master.style.configure('h1.TLabel', foreground=ev.orange, background='white', font=("Georgia", 48, "bold"))
         self.master.style.configure('h2.TLabel', foreground=ev.orange, background='white', font=("Georgia", 32, "bold"), justify='center')
         self.master.style.configure('p.TLabel', background='white', font=("Roboto", 14))
+        self.master.style.configure('a.TLabel', foreground="blue", background="white", cursor="hand1", justify="left", font=("Roboto", 12))
         self.master.style.configure('footer.TLabel', foreground=ev.orange, background='white', font=("Georgia", 10))
         self.master.style.configure('TButton', font=("Roboto", 12), bordercolor="#666")
         self.master.style.configure('Main.TButton', font=("Roboto", 16), bordercolor="#666", padding=(10, 10))

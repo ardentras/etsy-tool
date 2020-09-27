@@ -83,45 +83,51 @@ class GetTags(tk.Toplevel):
 
     def create_widgets(self):
         currRow=0
-        self.titleL = tk.Label(self, text="Retrieve Info From Listing", fg="black", bg="white")
-        self.titleL.grid(row=currRow, column=0, columnspan=5)
+        self.titleL = ttk.Label(self, text="Retrieve Info", style='h2.TLabel')
+        self.titleL.grid(row=currRow, column=1, columnspan=5)
 
         currRow=currRow+1
-        self.idL = tk.Label(self, text="Listing ID / URL:", fg="black", bg="white")
-        self.idL.grid(row=currRow, column=0, sticky="e")
+        self.idL = ttk.Label(self, text="Listing ID / URL:", style='p.TLabel')
+        self.idL.grid(row=currRow, column=1, sticky="e")
         self.idEntry = tk.Entry(self, takefocus=True, width=32)
         self.idEntry.bind(helpers.ctlA(), helpers.selectAllCallback)
-        self.idEntry.grid(row=currRow, column=1, columnspan=3)
+        self.idEntry.grid(row=currRow, column=2, columnspan=3)
 
         currRow=currRow+1
-        self.link = tk.Label(self, text="", fg="blue", bg="white", cursor="hand1", justify="left")
-        self.link.grid(row=currRow, column=0, columnspan=5)
+        self.link = ttk.Label(self, text="", style='a.TLabel')
+        self.link.grid(row=currRow, column=1, columnspan=5)
 
         currRow=currRow+1
-        self.viewsL = tk.Label(self, text="Views: n/a", bg="white")
-        self.viewsL.grid(row=currRow, column=0)
-        self.createdL = tk.Label(self, text="", bg="white")
-        self.createdL.grid(row=currRow, column=1, columnspan=2)
-        self.soldL = tk.Label(self, text="", bg="white")
-        self.soldL.grid(row=currRow, column=3, columnspan=2)
+        self.viewsL = ttk.Label(self, text="Views: n/a", style='p.TLabel', font=('Roboto', 12))
+        self.viewsL.grid(row=currRow, column=1)
+        self.createdL = ttk.Label(self, text="", style='p.TLabel', font=('Roboto', 12))
+        self.createdL.grid(row=currRow, column=2, columnspan=2)
+        self.soldL = ttk.Label(self, text="", style='p.TLabel', font=('Roboto', 12))
+        self.soldL.grid(row=currRow, column=4, columnspan=2)
         
         currRow=currRow+1
         self.tagsList = tk.Listbox(self, width=48, height=15, selectmode="extended")
-        self.tagsList.grid(row=currRow, column=0, columnspan=5)
+        self.tagsList.grid(row=currRow, column=1, columnspan=5)
 
         currRow=currRow+1
         self.loading = ttk.Progressbar(self)
-        self.loading.grid(row=currRow, column=0, columnspan=5)
+        self.loading.grid(row=currRow, column=1, columnspan=5)
         # the load_bar needs to be configured for indeterminate amount of bouncing
         self.loading.config(mode='determinate', maximum=100, value=0, length = 434)
 
         currRow=currRow+1
         self.help = ttk.Button(self, text="Help", command=self.getHelp)
-        self.help.grid(row=currRow, column=0)
+        self.help.grid(row=currRow, column=1)
         self.quit = ttk.Button(self, text="Go Back", command=self.destroy)
-        self.quit.grid(row=currRow, column=1, sticky="ew")
+        self.quit.grid(row=currRow, column=2, sticky="ew")
         self.submit = ttk.Button(self, text="Get Info", command=self.runQuery)
-        self.submit.grid(row=currRow, column=3, sticky="ew")
+        self.submit.grid(row=currRow, column=4, sticky="ew")
+
+        currRow=currRow+1
+        self.aSpacer2 = tk.Frame(self, height=10, width=15, bg="white")
+        self.aSpacer2.grid(row=currRow, column=0)
+        self.aSpacer3 = tk.Frame(self, height=10, width=15, bg="white")
+        self.aSpacer3.grid(row=currRow, column=6)
         
     def getHelp(self, *args):
         currRow=0
@@ -144,15 +150,18 @@ Hotkeys:
 Press <Return> to submit the query
 Press <Escape> to exit subcommand
         """
-        helpModal.info = tk.Label(helpModal, text=infotext, justify="left", padx=15, bg="white")
+        helpModal.info = tk.Label(helpModal, text=infotext, justify="left", padx=15, bg="white", font=('Roboto', 12))
         helpModal.info.grid(row=currRow, column=0, sticky="ew")
         currRow=currRow+1
-        helpModal.info = tk.Label(helpModal, text=hotkeytext, justify="center", padx=15, bg="white")
+        helpModal.info = tk.Label(helpModal, text=hotkeytext, justify="center", padx=15, bg="white", font=('Roboto', 12))
         helpModal.info.grid(row=currRow, column=0, sticky="ew")
 
         currRow=currRow+1
         helpModal.exit = ttk.Button(helpModal, text="Back", command=helpModal.destroy)
         helpModal.exit.grid(row=currRow, column=0)
+        currRow=currRow+1
+        helpModal.aSpacer = tk.Frame(helpModal, height=10, bg="white")
+        helpModal.aSpacer.grid(row=currRow, column=0)
 
     def runQuery(self, *args):
         if len(self.idEntry.get()) == 0:
@@ -168,17 +177,20 @@ Press <Escape> to exit subcommand
 No listing ID provided. 
 Please enter an ID or URL to query.
             """
-            errModal.info = tk.Label(errModal, text=infotext, justify="center", padx=15, bg="white")
+            errModal.info = tk.Label(errModal, text=infotext, justify="center", padx=15, bg="white", font=('Roboto', 12))
             errModal.info.grid(row=currRow, column=0, sticky="ew")
 
             currRow=currRow+1
             errModal.exit = ttk.Button(errModal, text="Okay", command=errModal.destroy)
             errModal.exit.grid(row=currRow, column=0)
+            currRow=currRow+1
+            errModal.aSpacer = tk.Frame(errModal, height=10, bg="white")
+            errModal.aSpacer.grid(row=currRow, column=0)
 
             return
 	
         self.viewsL.configure(text="Views: n/a")
-        self.link.configure(text="", fg="blue", cursor="hand1")
+        self.link.configure(text="")
         self.createdL.configure(text="")
         self.soldL.configure(text="")
 

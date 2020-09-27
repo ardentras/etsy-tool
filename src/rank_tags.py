@@ -177,15 +177,18 @@ Press <Return> to add a tag to the list
 Press <%s + Return> to submit the query
 Press <Escape> to exit subcommand
         """ % (helpers.getCtlShort())
-        helpModal.info = tk.Label(helpModal, text=infotext, justify="left", padx=15, bg="white")
+        helpModal.info = tk.Label(helpModal, text=infotext, justify="left", padx=15, bg="white", font=('Roboto', 12))
         helpModal.info.grid(row=currRow, column=0, sticky="ew")
         currRow=currRow+1
-        helpModal.info = tk.Label(helpModal, text=hotkeytext, justify="center", padx=15, bg="white")
+        helpModal.info = tk.Label(helpModal, text=hotkeytext, justify="center", padx=15, bg="white", font=('Roboto', 12))
         helpModal.info.grid(row=currRow, column=0, sticky="ew")
 
         currRow=currRow+1
         helpModal.exit = ttk.Button(helpModal, text="Back", command=helpModal.destroy)
         helpModal.exit.grid(row=currRow, column=0)
+        currRow=currRow+1
+        helpModal.aSpacer = tk.Frame(helpModal, height=10, bg="white")
+        helpModal.aSpacer.grid(row=currRow, column=0)
 
     def runQuery(self, *args):
         if len(self.tagsList.get(0, "end")) == 0:
@@ -201,12 +204,15 @@ Press <Escape> to exit subcommand
 No tags provided. 
 Please enter at least one tag to query.
             """
-            errModal.info = tk.Label(errModal, text=infotext, justify="center", padx=15, bg="white")
+            errModal.info = tk.Label(errModal, text=infotext, justify="center", padx=15, bg="white", font=('Roboto', 12))
             errModal.info.grid(row=currRow, column=0, sticky="ew")
 
             currRow=currRow+1
             errModal.exit = ttk.Button(errModal, text="Okay", command=errModal.destroy)
             errModal.exit.grid(row=currRow, column=0)
+            currRow=currRow+1
+            errModal.aSpacer = tk.Frame(errModal, height=10, bg="white")
+            errModal.aSpacer.grid(row=currRow, column=0)
 
             return
 
