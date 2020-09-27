@@ -59,6 +59,7 @@ class GetPrice(tk.Toplevel):
         self.title("Rank Tags")
         self.bind("<Return>", self.runQuery)
         self.bind("<Escape>", self.exit)
+        self.configure(bg="white")
         self.create_widgets()
 
     def exit(self, event):
@@ -78,19 +79,19 @@ class GetPrice(tk.Toplevel):
         self.urlEntry.grid(row=currRow, column=1, columnspan=3)
 
         currRow=currRow+1
-        self.listingTitle = tk.Label(self, text="")
+        self.listingTitle = tk.Label(self, text="", bg="white")
         self.listingTitle.grid(row=currRow, column=1, columnspan=4)
 
         currRow=currRow+1
-        self.link = tk.Label(self, text="", fg="blue", cursor="hand1", justify="left")
+        self.link = tk.Label(self, text="", fg="blue", bg="white", cursor="hand1", justify="left")
         self.link.grid(row=currRow, column=1, columnspan=4)
         
         currRow=currRow+1
-        self.sold = tk.Label(self, text="Sold for: ", justify="right")
+        self.sold = tk.Label(self, text="Sold for: ", justify="right", bg="white")
         self.sold.grid(row=currRow, column=1, columnspan=1)
-        self.priceHigh = tk.Label(self, text="")
+        self.priceHigh = tk.Label(self, text="", bg="white")
         self.priceHigh.grid(row=currRow, column=2, columnspan=1)
-        self.priceLow = tk.Label(self, text="")
+        self.priceLow = tk.Label(self, text="", bg="white")
         self.priceLow.grid(row=currRow, column=3, columnspan=1)
 
         currRow=currRow+1
@@ -113,7 +114,7 @@ class GetPrice(tk.Toplevel):
         
     def getHelp(self, *args):
         currRow=0
-        helpModal = tk.Toplevel()
+        helpModal = tk.Toplevel(bg="white")
         helpModal.focus()
         helpModal.resizable(False, False)
         helpModal.bind("<Escape>", self.exit)
@@ -128,10 +129,10 @@ Hotkeys:
 Press <Return> to submit the query
 Press <Escape> to exit subcommand
         """
-        helpModal.info = tk.Label(helpModal, text=infotext, justify="left", padx=15)
+        helpModal.info = tk.Label(helpModal, text=infotext, justify="left", padx=15, bg="white")
         helpModal.info.grid(row=currRow, column=0, sticky="ew")
         currRow=currRow+1
-        helpModal.info = tk.Label(helpModal, text=hotkeytext, justify="center", padx=15)
+        helpModal.info = tk.Label(helpModal, text=hotkeytext, justify="center", padx=15, bg="white")
         helpModal.info.grid(row=currRow, column=0, sticky="ew")
 
         currRow=currRow+1
@@ -141,7 +142,7 @@ Press <Escape> to exit subcommand
     def runQuery(self, *args):
         if len(self.urlEntry.get()) == 0:
             currRow=0
-            errModal = tk.Toplevel()
+            errModal = tk.Toplevel(bg="white")
             errModal.focus()
             errModal.resizable(False, False)
             errModal.bind("<Escape>", self.exit)
@@ -152,7 +153,7 @@ Press <Escape> to exit subcommand
 No listing URL provided. 
 Please enter an URL to query.
             """
-            errModal.info = tk.Label(errModal, text=infotext, justify="center", padx=15)
+            errModal.info = tk.Label(errModal, text=infotext, justify="center", padx=15, bg="white")
             errModal.info.grid(row=currRow, column=0, sticky="ew")
             currRow=currRow+1
             errModal.exit = ttk.Button(errModal, text="Okay", command=errModal.destroy)

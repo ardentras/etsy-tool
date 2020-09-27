@@ -30,7 +30,7 @@ class Application(tk.Frame):
         self.create_styles()
         self.create_widgets()
         self.master.configure()
-        self.configure()
+        self.configure(bg="white")
         self.pack()
 
     def create_styles(self):
