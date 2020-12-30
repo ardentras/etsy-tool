@@ -242,7 +242,6 @@ Please enter at least one tag to query.
             if len(tags) == 0:
                 currRow=currRow+1
                 tagsListModal.error = ttk.Label(tagsListModal, text="\nNo tags found for search   \n\n", style='p.TLabel', bg="white")
->>>>>>> b619628... fixed background colors
                 tagsListModal.error.grid(row=currRow, column=1)
             else:
 
