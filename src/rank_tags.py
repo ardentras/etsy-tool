@@ -234,7 +234,7 @@ Please enter at least one tag to query.
 
             if len(tags) == 0:
                 currRow=currRow+1
-                tagsListModal.error = ttk.Label(tagsListModal, text="\nNo tags found for search\n\n", style='p.TLabel')
+                tagsListModal.error = ttk.Label(tagsListModal, text="\nNo tags found for search   \n\n", style='p.TLabel')
                 tagsListModal.error.grid(row=currRow, column=1)
             else:
 
